@@ -3,6 +3,7 @@ const router = express.Router();
 
 const itemsController = require("../controllers/ItemsController");
 const usersController = require("../controllers/UsersController");
+const categoriesController = require("../controllers/CategoriesController");
 
 router.get("/", (req, res) => {
   res.render("index");
@@ -55,4 +56,42 @@ router.post("/login", async (req, res) => {
   await usersController.authorizeUserLogin(req, res);
 });
 
+router.get("/edititem/:id", async (req, res) => {
+  try {
+    const itemDetailsPromise = itemsController.getItembyId(
+      req,
+      res,
+      req.params.id.trim()
+    );
+    const itemDetail = await itemDetailsPromise;
+    res.render("editItem", { itemDetail });
+  } catch (error) {}
+});
+
+router.post("/edititem", async (req, res) => {
+  try {
+    await itemsController.editItem(req, res);
+  } catch (error) {}
+});
+
+router.get("/categorylist", async (req, res) => {
+  try {
+    const CategoriesPromise = categoriesController.getCategories();
+    const categories = await CategoriesPromise;
+
+    res.render("categoryList", { categories });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
+router.get("/addcategory", (req, res) => {
+  res.render("addCategory");
+});
+
+router.post("/addcategory", async (req, res) => {
+  await categoriesController.addCategory(req, res);
+
+  res.redirect("/categorylist");
+});
 module.exports = router;
