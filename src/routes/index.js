@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const itemsController = require("../controllers/ItemsController");
+const usersController = require("../controllers/UsersController");
 
 router.get("/", (req, res) => {
   res.render("index");
@@ -38,6 +39,20 @@ router.get("/deleteitem/:id", async (req, res) => {
 
 router.get("/item-details", (req, res) => {
   res.render("itemDetails");
+});
+
+router.get("/newuser", (req, res) => {
+  res.render("newUser");
+});
+
+router.post("/newuser", async (req, res) => {
+  await usersController.addUser(req, res);
+
+  res.redirect("/newuser");
+});
+
+router.post("/login", async (req, res) => {
+  await usersController.authorizeUserLogin(req, res);
 });
 
 module.exports = router;

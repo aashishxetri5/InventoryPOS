@@ -51,7 +51,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Middleware to handle file uploads
-app.use(fileUpload());
+app.use(fileUpload({
+  limits: { fileSize: 50 * 1024 * 1024 }, // 50MB file size limit
+}));
 
 // Routes
 const routes = require("./src/routes");
